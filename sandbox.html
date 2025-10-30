@@ -27,7 +27,7 @@
     
     <div class="container">
         <div class="tool-header">
-            <h1 class="tool-title">📊 PayPal CSV Formatter</h1>
+            <h1 class="tool-title">💫 PayPal CSV Formatter</h1>
             <p class="tool-subtitle">Upload a PayPal CSV file, apply transformations, and download the reformatted version for QuickBooks.</p>
         </div>
         
@@ -73,8 +73,8 @@
         
         <div class="preview-section" id="previewSection">
             <div class="alert alert-success">
-                <h4 class="alert-heading">File Processed Successfully!</h4>
-                <p>Your CSV file has been processed. You can download it using the button below.</p>
+                <h4 class="alert-heading">High Five! 🙌🏻</h4>
+                <p>Your CSV file has been successfully processed.</p>
                 <hr style="margin: 10px 0; border: none; border-top: 1px solid #6ee7b7;">
                 <p style="margin-bottom: 0;">Preview of your data (first 10 rows):</p>
             </div>
@@ -255,61 +255,70 @@
                 }
             }
             
-            // Find column indices
-            let timeIdx = null;
-            let tzIdx = null;
+            // Find column indices in the original CSV
+            let dateIdx = null;
             let descIdx = null;
             let nameIdx = null;
+            let amountIdx = null;
+            let feeIdx = null;
             
             for (let i = 0; i < headers.length; i++) {
-                if (headers[i] === 'Time') timeIdx = i;
-                else if (headers[i] === 'Time Zone') tzIdx = i;
+                if (headers[i] === 'Date') dateIdx = i;
                 else if (headers[i] === 'Description') descIdx = i;
                 else if (headers[i] === 'Name') nameIdx = i;
+                else if (headers[i] === 'Gross') amountIdx = i;
+                else if (headers[i] === 'Fee') feeIdx = i;
             }
             
-            // Insert Vendor column header
-            if (tzIdx !== null) {
-                headers.splice(tzIdx + 1, 0, 'Vendor');
+            // Create new CSV with only 3 columns
+            const newRows = [];
+            
+            // Create new header row
+            newRows.push(['Date', 'Description', 'Amount']);
+            
+            // Process each data row
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
                 
-                // Calculate adjusted indices
-                const adjTimeIdx = timeIdx !== null && timeIdx > tzIdx ? timeIdx + 1 : timeIdx;
-                const adjDescIdx = descIdx !== null && descIdx > tzIdx ? descIdx + 1 : descIdx;
-                const adjNameIdx = nameIdx !== null && nameIdx > tzIdx ? nameIdx + 1 : nameIdx;
+                // Get Date (Column A from original)
+                const dateValue = dateIdx !== null && dateIdx < row.length ? row[dateIdx].trim() : '';
                 
-                // Process each data row
-                for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    
-                    // Create vendor value BEFORE inserting the column
-                    let vendorValue = '';
-                    if (nameIdx !== null && nameIdx < row.length) {
-                        const nameVal = row[nameIdx].trim();
-                        if (nameVal && nameVal !== 'nan' && nameVal !== '') {
-                            vendorValue = nameVal;
-                        }
+                // Create Description value (Name if available, otherwise Description)
+                let descriptionValue = '';
+                if (nameIdx !== null && nameIdx < row.length) {
+                    const nameVal = row[nameIdx].trim();
+                    if (nameVal && nameVal !== 'nan' && nameVal !== '') {
+                        descriptionValue = nameVal;
                     }
-                    
-                    if (!vendorValue && descIdx !== null && descIdx < row.length) {
-                        vendorValue = row[descIdx].trim();
-                    }
-                    
-                    // Insert vendor value
-                    row.splice(tzIdx + 1, 0, vendorValue);
-                    
-                    // Format time to remove leading zeros
-                    if (adjTimeIdx !== null && adjTimeIdx < row.length) {
-                        let timeVal = row[adjTimeIdx];
-                        timeVal = timeVal.replace(/^0+/, '');
-                        if (timeVal.startsWith(':')) {
-                            timeVal = '0' + timeVal;
+                }
+                
+                if (!descriptionValue && descIdx !== null && descIdx < row.length) {
+                    descriptionValue = row[descIdx].trim();
+                }
+                
+                // Get Amount (Column G from original - "Gross")
+                const amountValue = amountIdx !== null && amountIdx < row.length ? row[amountIdx].trim() : '';
+                
+                // Add main transaction row
+                newRows.push([dateValue, descriptionValue, amountValue]);
+                
+                // Check if there's a fee and add a separate row for it
+                if (feeIdx !== null && feeIdx < row.length) {
+                    const feeValue = row[feeIdx].trim();
+                    // Only add fee row if fee is not 0 or empty
+                    if (feeValue && feeValue !== '0' && feeValue !== '0.00') {
+                        // Parse the fee value and ensure it's negative
+                        let feeAmount = parseFloat(feeValue);
+                        if (!isNaN(feeAmount) && feeAmount !== 0) {
+                            // Make sure fee is always negative
+                            feeAmount = Math.abs(feeAmount) * -1;
+                            newRows.push([dateValue, 'PayPal Fee', feeAmount.toString()]);
                         }
-                        row[adjTimeIdx] = timeVal;
                     }
                 }
             }
             
-            return rows;
+            return newRows;
         }
         
         function rowsToCSV(rows) {
