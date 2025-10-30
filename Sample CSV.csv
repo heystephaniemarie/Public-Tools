@@ -1,0 +1,9 @@
+Date,Time,Time Zone,Description,Currency,Gross,Fee,Net,Balance,Transaction ID,From Email Address,Name,Bank Name,Bank Account,Shipping and Handling Amount,Sales Tax,Invoice ID,Reference Txn ID
+4/2/2025,11:24:08,America/Los_Angeles,PreApproved Payment Bill User Payment,USD,-25,0,-25,-25,1CE333300U1299928,paypal_usd@starbucks.com,Starbucks Coffee Company,VERITY CREDIT UNION,1840,0,0,VNE50DVLCP4SDAURJ0LDFF7MP4,5PE47920EE268792L
+4/2/2025,11:24:08,America/Los_Angeles,Bank Deposit to PP Account,USD,25,0,25,0,81P79438V32698100,,,VERITY CREDIT UNION,1840,0,0,VNE50DVLCP4SDAURJ0LDFF7MP4,1CE333300U1299928
+4/2/2025,16:25:29,America/Los_Angeles,PreApproved Payment Bill User Payment,USD,-12,0,-12,-12,3AM5435892327472P,paypal@washpost.com,The Washington Post,VERITY CREDIT UNION,1840,0,0,00101DIKQK,B-2F714926PT127615N
+4/2/2025,16:25:29,America/Los_Angeles,Bank Deposit to PP Account,USD,12,0,12,0,66Y972763N4306400,,,VERITY CREDIT UNION,1840,0,0,00101DIKQK,3AM5435892327472P
+4/3/2025,1:24:09,America/Los_Angeles,PreApproved Payment Bill User Payment,USD,-13,0,-13,-13,6GY52223KT311133T,paypal-parent+civics@actblue.com,ActBlue Civics Inc,VERITY CREDIT UNION,1840,0,0,,B-06F70810TC0631928
+4/3/2025,1:24:09,America/Los_Angeles,Bank Deposit to PP Account,USD,13,0,13,0,16L78693WG815310W,,,VERITY CREDIT UNION,1840,0,0,,6GY52223KT311133T
+4/3/2025,1:52:20,America/Los_Angeles,PreApproved Payment Bill User Payment,USD,-17.99,0,-17.99,-17.99,1GB788021J795120W,paypal@netflix.com,Netflix.com,,,0,0,4.54102E+16,B-64471361TG782851W
+4/3/2025,1:52:20,America/Los_Angeles,General Card Deposit,USD,17.99,0,17.99,0,2GB29032VG8045431,,,,,0,0,4.54102E+16,1GB788021J795120W
